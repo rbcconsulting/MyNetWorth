@@ -21,11 +21,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DATABASE_CONSTANTS.SQL_CREATE_TBL_ASSETS);
+        db.execSQL(DATABASE_CONSTANTS.SQL_CREATE_TBL_DEBTS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(DATABASE_CONSTANTS.SQL_DROP_TBL_ASSETS);
+        db.execSQL(DATABASE_CONSTANTS.SQL_DROP_TBL_DEBTS);
         onCreate(db);
     }
 
