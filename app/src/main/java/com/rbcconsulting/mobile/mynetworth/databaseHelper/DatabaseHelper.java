@@ -41,6 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return dbHelper.query(tableName, columns, whereClause, whereValues, null, null, null);
     }
 
+    public Cursor getAggregatedRecords(String tableName, String[] columns, String whereClause,
+                                       String[] whereValues, String groupBy, String having) {
+        return dbHelper.query(tableName, columns, whereClause, whereValues, groupBy, having, null);
+    }
+
     public int updateRecord(String tableName, String whereClause, String[] whereValues,
                             ContentValues contentValues) {
         return dbHelper.update(tableName, contentValues, whereClause, whereValues);

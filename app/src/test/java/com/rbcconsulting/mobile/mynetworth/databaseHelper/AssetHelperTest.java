@@ -2,6 +2,7 @@ package com.rbcconsulting.mobile.mynetworth.databaseHelper;
 
 import com.rbcconsulting.mobile.mynetworth.BuildConfig;
 import com.rbcconsulting.mobile.mynetworth.model.Asset;
+import com.rbcconsulting.mobile.mynetworth.utility.AppUtility;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -153,5 +154,60 @@ public class AssetHelperTest {
 
         //check if all records inserted were all selected
         assertEquals(assetHelper.getAllAssets().size(), createdAssets.size());
+    }
+
+    @Test
+    public void testGetTotalAssetsAmount() {
+        AssetHelper assetHelper = new AssetHelper(dbHelper);
+
+        assetHelper.addAsset(new Asset("savings", 120.0, "remarks", "2017-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 320.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 420.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 2320.42, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 25230.3232, "remarks", "2016-08-01"));
+
+        //check if total amount of assets are correct
+        assertEquals(28410.74, AppUtility.roundNearest2(assetHelper.getTotalAssetsAmount()));
+    }
+
+    @Test
+    public void testGetTotalAmount() {
+        AssetHelper assetHelper = new AssetHelper(dbHelper);
+
+        assetHelper.addAsset(new Asset("savings", 120.0, "remarks", "2017-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 320.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 420.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 2320.42, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 25230.3232, "remarks", "2016-08-01"));
+
+        //check if total amount of assets are correct
+        assertEquals(28410.74, AppUtility.roundNearest2(assetHelper.getTotalAmount().getDouble(0)));
+    }
+
+    @Test
+    public void testGetTotalAmountByDate() {
+        AssetHelper assetHelper = new AssetHelper(dbHelper);
+
+        assetHelper.addAsset(new Asset("savings", 120.0, "remarks", "2017-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 320.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 420.0, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 2320.42, "remarks", "2016-08-01"));
+        assetHelper.addAsset(new Asset("uitf", 25230.3232, "remarks", "2016-08-01"));
+
+        double totalAmount = assetHelper.getTotalAmountByDate(true, "2017-08-01").getDouble(0);
+        //check if total amount of assets are correct
+        assertEquals(120.0, AppUtility.roundNearest2(totalAmount));
+        //double totalAmount;
+        totalAmount = assetHelper.getTotalAmountByDate(false, "2017-08-01").getDouble(0);
+        //check if total amount of assets are correct
+        assertEquals(120.0, AppUtility.roundNearest2(totalAmount));
+
+        totalAmount = assetHelper.getTotalAmountByDate(true, "2016-08-01").getDouble(0);
+        //check if total amount of assets are correct
+        assertEquals(28290.74, AppUtility.roundNearest2(totalAmount));
+
+        totalAmount = assetHelper.getTotalAmountByDate(false, "2016-08-01").getDouble(0);
+        //check if total amount of assets are correct
+        assertEquals(28290.74, AppUtility.roundNearest2(totalAmount));
     }
 }

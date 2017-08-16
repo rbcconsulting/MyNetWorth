@@ -3,7 +3,7 @@ package com.rbcconsulting.mobile.mynetworth.databaseHelper;
 /**
  * Created by Ralph on 11/08/2017.
  * The purpose of this class is to hold all constant values
- *  related to database (e.g. table names, column names, sql queries)
+ * related to database (e.g. table names, column names, sql queries)
  */
 
 public class DATABASE_CONSTANTS {
@@ -26,6 +26,11 @@ public class DATABASE_CONSTANTS {
     public static final String _DEBTS_REMARKS = "remarks";
     public static final String _DEBTS_DATE = "date";
 
+    //Derived column names
+    public static final String _ASSET_DRV_YEAR = "SUBSTR(" + _ASSETS_DATE + ",1,4)";
+    public static final String _ASSET_DRV_MTH = "SUBSTR(" + _ASSETS_DATE + ",6,2)";
+    public static final String _DEBT_DRV_YEAR = "SUBSTR(" + _DEBTS_DATE + ",1,4)";
+    public static final String _DEBT_DRV_MTH = "SUBSTR(" + _DEBTS_DATE + ",6,2)";
 
     //Create Table SQL
     public static final String SQL_CREATE_TBL_ASSETS = "CREATE TABLE " +

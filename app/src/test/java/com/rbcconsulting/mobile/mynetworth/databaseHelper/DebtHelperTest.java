@@ -2,6 +2,7 @@ package com.rbcconsulting.mobile.mynetworth.databaseHelper;
 
 import com.rbcconsulting.mobile.mynetworth.BuildConfig;
 import com.rbcconsulting.mobile.mynetworth.model.Debt;
+import com.rbcconsulting.mobile.mynetworth.utility.AppUtility;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -153,5 +154,60 @@ public class DebtHelperTest {
 
         //check if all records inserted were all selected
         assertEquals(debtHelper.getAllDebts().size(), createdDebts.size());
+    }
+
+    @Test
+    public void testGetTotalDebtsAmount() {
+        DebtHelper debtHelper = new DebtHelper(dbHelper);
+
+        debtHelper.addDebt(new Debt("loan", 999.32, "remarks", "2017-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 123.22, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 7799.23, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 2320.42, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 25230.3232, "remarks", "2016-08-01"));
+
+        //check if total amount of debts are correct
+        assertEquals(36472.51, AppUtility.roundNearest2(debtHelper.getTotalDebtsAmount()));
+    }
+
+    @Test
+    public void testGetTotalAmount() {
+        DebtHelper debtHelper = new DebtHelper(dbHelper);
+
+        debtHelper.addDebt(new Debt("loan", 120.0, "remarks", "2017-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 320.0, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 420.0, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 2320.42, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 25230.3232, "remarks", "2016-08-01"));
+
+        //check if total amount of debts are correct
+        assertEquals(28410.74, AppUtility.roundNearest2(debtHelper.getTotalAmount().getDouble(0)));
+    }
+
+    @Test
+    public void testGetTotalAmountByDate() {
+        DebtHelper debtHelper = new DebtHelper(dbHelper);
+
+        debtHelper.addDebt(new Debt("loan", 120.0, "remarks", "2017-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 320.0, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 420.0, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 2320.42, "remarks", "2016-08-01"));
+        debtHelper.addDebt(new Debt("emergency", 25230.3232, "remarks", "2016-08-01"));
+
+        double totalAmount = debtHelper.getTotalAmountByDate(true, "2017-08-01").getDouble(0);
+        //check if total amount of debts are correct
+        assertEquals(120.0, AppUtility.roundNearest2(totalAmount));
+        //double totalAmount;
+        totalAmount = debtHelper.getTotalAmountByDate(false, "2017-08-01").getDouble(0);
+        //check if total amount of debts are correct
+        assertEquals(120.0, AppUtility.roundNearest2(totalAmount));
+
+        totalAmount = debtHelper.getTotalAmountByDate(true, "2016-08-01").getDouble(0);
+        //check if total amount of debts are correct
+        assertEquals(28290.74, AppUtility.roundNearest2(totalAmount));
+
+        totalAmount = debtHelper.getTotalAmountByDate(false, "2016-08-01").getDouble(0);
+        //check if total amount of debts are correct
+        assertEquals(28290.74, AppUtility.roundNearest2(totalAmount));
     }
 }

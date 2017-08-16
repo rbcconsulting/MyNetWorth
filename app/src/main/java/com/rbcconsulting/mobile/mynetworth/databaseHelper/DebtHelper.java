@@ -20,6 +20,10 @@ public class DebtHelper {
         this.dbHelper = dbHelper;
     }
 
+    public Cursor getRecord(String[] columns, String whereClause, String[] whereValues) {
+        return dbHelper.getRecord(DATABASE_CONSTANTS.TBL_DEBTS, columns, whereClause, whereValues);
+    }
+
     public Debt addDebt(Debt debt) {
         ContentValues contentValues = new ContentValues();
         Cursor debtCursor;
@@ -126,5 +130,49 @@ public class DebtHelper {
                 new String[]{String.valueOf(debt.getDebtId())},
                 contentValues
         );
+    }
+
+    public double getTotalDebtsAmount() {
+
+        double totalDebtAmount = 0.0;
+
+        for (Debt debt : this.getAllDebts()) {
+            totalDebtAmount += debt.getAmount();
+        }
+
+        return totalDebtAmount;
+    }
+
+    //TODO update other methods to accomodate CursorAdapter function
+    public Cursor getTotalAmount() {
+        Cursor c_totalAmount = this.getRecord(
+                new String[]{"SUM(" + DATABASE_CONSTANTS._DEBTS_AMOUNT + ")"}
+                , null
+                , null);
+        c_totalAmount.moveToFirst();
+        return c_totalAmount;
+    }
+
+    public Cursor getTotalAmountByDate(boolean isYearOnly, String date) {
+
+        String whereClause = isYearOnly ? DATABASE_CONSTANTS._DEBT_DRV_YEAR + "=?" :
+                DATABASE_CONSTANTS._DEBT_DRV_YEAR + "=? AND " +
+                        DATABASE_CONSTANTS._DEBT_DRV_MTH + "=?";
+
+        String[] whereValues;
+
+        if (isYearOnly) {
+            whereValues = new String[]{date.substring(0, 4)};
+        } else {
+            whereValues = new String[]{date.substring(0, 4), date.substring(5, 7)};
+        }
+
+        Cursor c_totalAmount = this.getRecord(
+                new String[]{"SUM(" + DATABASE_CONSTANTS._DEBTS_AMOUNT + ")"}
+                , whereClause
+                , whereValues);
+
+        c_totalAmount.moveToFirst();
+        return c_totalAmount;
     }
 }
